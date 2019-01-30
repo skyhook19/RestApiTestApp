@@ -26,6 +26,7 @@ public class HibernateConfig {
         properties.put("hibernate.dialect", env.getRequiredProperty("spring.jpa.properties.hibernate.dialect"));
         properties.put("hibernate.show_sql", env.getRequiredProperty("spring.jpa.show-sql"));
         properties.put("hibernate.hbm2ddl.auto", env.getRequiredProperty("spring.jpa.hibernate.ddl-auto"));
+        properties.put("hibernate.temp.use_jdbc_metadata_defaults", env.getRequiredProperty("spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults"));
         return properties;
     }
 

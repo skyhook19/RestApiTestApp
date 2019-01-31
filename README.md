@@ -4,7 +4,8 @@ This is a simple Spring Boot REST API project, using plain Hibernate as a JPA im
 
 ## SQL scripts for creating table structure
 
-###Department table:
+### Department table:
+
 ```
 CREATE TABLE department(
 	id serial PRIMARY KEY,
@@ -14,7 +15,8 @@ CREATE TABLE department(
 );
 ```
 
-###Employee table:
+### Employee table:
+
 ```
 CREATE TYPE gen AS ENUM ('f', 'm');
 
@@ -39,9 +41,10 @@ create UNIQUE INDEX on employee(department_id, is_head_of_department)
 where is_head_of_department = true;
 ```
 
-##SQL scripts to add some data 
+## SQL scripts to add some data 
 
-###Department table:
+### Department table:
+
 ```
 INSERT INTO department(name, date_of_creation)
 VALUES ('Apple Head Department', '1992-06-01');
@@ -70,7 +73,8 @@ VALUES
 ('Software Sales Department', '1994-02-27', 4);
 ```
 
-###Employee table:
+### Employee table:
+
 ```
 INSERT INTO employee (first_name, middle_name, last_name, gender, birth_date, joined_date, discharge_date, phone, email, salary, position, department_id, is_head_of_department)
 VALUES 

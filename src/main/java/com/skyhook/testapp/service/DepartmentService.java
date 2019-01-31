@@ -1,8 +1,9 @@
 package com.skyhook.testapp.service;
 
-import com.skyhook.testapp.entity.Department;
+import com.skyhook.testapp.domain.dto.DepartmentDto;
+import com.skyhook.testapp.domain.entity.Department;
 
 public interface DepartmentService {
 
-    public Department getDepartment(int id);
+    public DepartmentDto getDepartmentInfo(int id);
 }

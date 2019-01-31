@@ -1,7 +1,7 @@
-package com.skyhook.testapp.dao.daoImpl;
+package com.skyhook.testapp.domain.dao.daoImpl;
 
-import com.skyhook.testapp.dao.DepartmentDao;
-import com.skyhook.testapp.entity.Department;
+import com.skyhook.testapp.domain.dao.DepartmentDao;
+import com.skyhook.testapp.domain.entity.Department;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +24,13 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public List<Department> getAllDepartments() {
         Session currentSession = sessionFactory.getCurrentSession();
-        List<Department> departments = (List<Department>) currentSession.createQuery("FROM department").list();
-        return departments;
+        return (List<Department>) currentSession.createQuery("FROM department").list();
     }
 
     @Override
     public Department getDepartment(int id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        Department department = currentSession.get(Department.class, id);
-        return department;
+        return currentSession.get(Department.class, id);
     }
 
     @Override

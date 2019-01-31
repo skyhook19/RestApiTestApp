@@ -44,7 +44,7 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.skyhook.testapp.entity");
+        sessionFactory.setPackagesToScan("com.skyhook.testapp.domain.entity");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

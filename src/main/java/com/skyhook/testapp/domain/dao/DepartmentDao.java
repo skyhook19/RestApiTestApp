@@ -1,6 +1,6 @@
-package com.skyhook.testapp.dao;
+package com.skyhook.testapp.domain.dao;
 
-import com.skyhook.testapp.entity.Department;
+import com.skyhook.testapp.domain.entity.Department;
 
 import java.util.List;
 

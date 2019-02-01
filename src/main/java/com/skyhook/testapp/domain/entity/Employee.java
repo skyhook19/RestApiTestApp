@@ -1,7 +1,6 @@
 package com.skyhook.testapp.domain.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -42,7 +41,7 @@ public class Employee {
 
     private String position;
 
-    @ManyToOne(cascade={CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 

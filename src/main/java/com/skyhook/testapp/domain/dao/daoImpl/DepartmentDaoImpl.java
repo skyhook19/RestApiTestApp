@@ -16,27 +16,32 @@ public class DepartmentDaoImpl implements DepartmentDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public void saveDepartment(Department department) {
+    public Integer saveDepartment(Department department) {
         Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(department);
+        return (Integer) currentSession.save(department);
     }
 
     @Override
     public List<Department> getAllDepartments() {
         Session currentSession = sessionFactory.getCurrentSession();
-        return (List<Department>) currentSession.createQuery("FROM department").list();
+        return (List<Department>) currentSession.createQuery("FROM Department").list();
     }
 
     @Override
-    public Department getDepartment(int id) {
+    public Department getDepartment(Integer id) {
         Session currentSession = sessionFactory.getCurrentSession();
         return currentSession.get(Department.class, id);
     }
 
     @Override
-    public void deleteDepartment(int id) {
+    public void deleteDepartment(Department department) {
         Session currentSession = sessionFactory.getCurrentSession();
-        Department departmentToDelete = currentSession.byId(Department.class).load(id);
-        currentSession.delete(departmentToDelete);
+        currentSession.delete(department);
+    }
+
+    @Override
+    public void updateDepartment(Department department) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.update(department);
     }
 }

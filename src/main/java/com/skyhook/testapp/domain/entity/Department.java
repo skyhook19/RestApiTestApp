@@ -1,9 +1,9 @@
 package com.skyhook.testapp.domain.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,14 +17,18 @@ public class Department {
     private String name;
 
     @Column(name = "date_of_creation", columnDefinition = "DATE")
+    @CreationTimestamp
     private LocalDate dateOfCreation;
 
-    @ManyToOne(cascade={CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "parent_id")
     private Department parentDepartment;
 
-    @OneToMany(mappedBy="parentDepartment")
-    private List<Department> subDepartments = new ArrayList<Department>();
+    @OneToMany(mappedBy="parentDepartment", cascade={CascadeType.ALL})
+    private List<Department> subDepartments;
+
+    @OneToMany(mappedBy="department", cascade={CascadeType.ALL})
+    private List<Employee> employees;
 
     public Department() {
     }
@@ -67,6 +71,14 @@ public class Department {
 
     public void setSubDepartments(List<Department> subDepartments) {
         this.subDepartments = subDepartments;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override

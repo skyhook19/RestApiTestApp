@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface DepartmentDao {
 
-    public void saveDepartment(Department department);
+    public Integer saveDepartment(Department department);
 
     public List<Department> getAllDepartments();
 
-    public Department getDepartment(int id);
+    public Department getDepartment(Integer id);
 
-    public void deleteDepartment(int id);
+    public void deleteDepartment(Department department);
+
+    public void updateDepartment(Department department);
 }

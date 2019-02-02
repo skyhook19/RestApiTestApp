@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value={"/department"})
+@RequestMapping(value={"/departments"})
 public class DepartmentController {
 
     @Autowired

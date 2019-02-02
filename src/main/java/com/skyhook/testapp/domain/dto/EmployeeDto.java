@@ -1,6 +1,7 @@
 package com.skyhook.testapp.domain.dto;
 
 import com.skyhook.testapp.domain.entity.Employee;
+import com.skyhook.testapp.domain.entity.Gender;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ public class EmployeeDto implements Serializable {
     private String firstName;
     private String middleName;
     private String lastName;
-    private String gender;
+    private Gender gender;
     private LocalDate birthDate;
     private LocalDate joinedDate;
     private LocalDate dischargeDate;
@@ -75,11 +76,11 @@ public class EmployeeDto implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

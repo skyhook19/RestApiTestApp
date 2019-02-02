@@ -1,11 +1,19 @@
 package com.skyhook.testapp.domain.entity;
 
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "employee")
+@TypeDef(
+        name = "pgsql_enum",
+        typeClass = PostgreSQLEnumType.class
+)
 public class Employee {
 
     @Id
@@ -21,7 +29,9 @@ public class Employee {
     @Column(name = "last_name")
     private String lastName;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    @Type( type = "pgsql_enum" )
+    private Gender gender;
 
     @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
@@ -83,11 +93,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

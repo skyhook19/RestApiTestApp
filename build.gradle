@@ -28,4 +28,5 @@ dependencies {
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compile 'com.vladmihalcea:hibernate-types-52:2.4.0'
 }

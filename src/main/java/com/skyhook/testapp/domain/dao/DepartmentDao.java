@@ -12,6 +12,8 @@ public interface DepartmentDao {
 
     public Department getDepartment(Integer id);
 
+    public Department getDepartmentByName(String name);
+
     public void deleteDepartment(Department department);
 
     public void updateDepartment(Department department);

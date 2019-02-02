@@ -29,4 +29,5 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile 'com.vladmihalcea:hibernate-types-52:2.4.0'
+	compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.13.Final'
 }

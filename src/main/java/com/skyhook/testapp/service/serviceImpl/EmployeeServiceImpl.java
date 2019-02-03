@@ -6,6 +6,8 @@ import com.skyhook.testapp.domain.dto.EmployeeDto;
 import com.skyhook.testapp.domain.entity.Department;
 import com.skyhook.testapp.domain.entity.Employee;
 import com.skyhook.testapp.service.EmployeeService;
+import com.skyhook.testapp.validation.exceptions.NotUniqueEmailException;
+import com.skyhook.testapp.validation.exceptions.NotUniquePhoneException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,28 +50,61 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeDto addEmployee(EmployeeDto employeeDto) {
-        Employee employee = createEmployeeFromEmployeeDto(employeeDto);
-        employeeDao.saveEmployee(employee);
-        Employee savedEmployeeInstance = employeeDao.getEmployee(employee.getId());
-        return new EmployeeDto(savedEmployeeInstance);
+        Employee employeeToSave = new Employee();
+
+        String newEmail = employeeDto.getEmail();
+        if (employeeDao.existsByEmail(newEmail)) {
+            throw new NotUniqueEmailException();
+        }
+
+        String newPhone = employeeDto.getPhone();
+        if (employeeDao.existsByPhone(newPhone)) {
+            throw new NotUniquePhoneException();
+        }
+
+        setEmployeeDtoFieldsToEntity(employeeDto, employeeToSave);
+        employeeDao.saveEmployee(employeeToSave);
+        Employee employeeAfterSave = employeeDao.getEmployee(employeeToSave.getId());
+        return new EmployeeDto(employeeAfterSave);
     }
 
-    private Employee createEmployeeFromEmployeeDto(EmployeeDto employeeDto) {
-        Employee employee = new Employee();
-        employee.setFirstName(employeeDto.getFirstName());
-        employee.setMiddleName(employeeDto.getMiddleName());
-        employee.setLastName(employeeDto.getLastName());
-        employee.setGender(employeeDto.getGender());
-        employee.setBirthDate(employeeDto.getBirthDate());
-        employee.setJoinedDate(employeeDto.getJoinedDate());
-        employee.setDischargeDate(employeeDto.getDischargeDate());
-        employee.setPhone(employeeDto.getPhone());
-        employee.setEmail(employeeDto.getEmail());
-        employee.setSalary(employeeDto.getSalary());
-        employee.setPosition(employeeDto.getPosition());
-        employee.setDepartment(departmentDao.getDepartment(employeeDto.getDepartment()));
-        employee.setHeadOfDepartment(employeeDto.isHeadOfDepartment());
+    @Override
+    @Transactional
+    public EmployeeDto updateEmployeeById(Integer id, EmployeeDto employeeDto) {
+        Employee employeeBeforeUpdate = employeeDao.getEmployee(id);
+        if (employeeBeforeUpdate == null) {
+            return null;
+        }
 
-        return employee;
+        String newEmail = employeeDto.getEmail();
+        if (!newEmail.equals(employeeBeforeUpdate.getEmail()) && employeeDao.existsByEmail(newEmail)) {
+            throw new NotUniqueEmailException();
+        }
+
+        String newPhone = employeeDto.getPhone();
+        if (!newPhone.equals(employeeBeforeUpdate.getPhone()) && employeeDao.existsByPhone(newPhone)) {
+            throw new NotUniquePhoneException();
+        }
+
+        setEmployeeDtoFieldsToEntity(employeeDto, employeeBeforeUpdate);
+        employeeDao.saveEmployee(employeeBeforeUpdate);
+        Employee employeeAfterUpdate = employeeDao.getEmployee(id);
+        return new EmployeeDto(employeeAfterUpdate);
+    }
+
+    private void setEmployeeDtoFieldsToEntity(EmployeeDto dto, Employee emp) {
+        emp.setFirstName(dto.getFirstName());
+        emp.setMiddleName(dto.getMiddleName());
+        emp.setLastName(dto.getLastName());
+        emp.setGender(dto.getGender());
+        emp.setBirthDate(dto.getBirthDate());
+        emp.setJoinedDate(dto.getJoinedDate());
+        emp.setDischargeDate(dto.getDischargeDate());
+        emp.setPhone(dto.getPhone());
+        emp.setEmail(dto.getEmail());
+        emp.setSalary(dto.getSalary());
+        emp.setPosition(dto.getPosition());
+        emp.setDepartment(departmentDao.getDepartment(dto.getDepartment()));
+        emp.setHeadOfDepartment(dto.isHeadOfDepartment());
     }
 }

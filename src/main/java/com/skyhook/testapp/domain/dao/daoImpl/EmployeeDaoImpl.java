@@ -62,5 +62,39 @@ public class EmployeeDaoImpl implements EmployeeDao {
         return currentSession.createQuery(employeeCriteriaQuery).getSingleResult();
     }
 
+    @Override
+    public Boolean existsByEmail(String email) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<Employee> employeeCriteriaQuery = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> employeeRoot = employeeCriteriaQuery.from(Employee.class);
+        employeeCriteriaQuery.select(employeeRoot);
 
+        Predicate existsEmail = criteriaBuilder.equal(employeeRoot.get("email"), email);
+        employeeCriteriaQuery.where(existsEmail);
+
+        if (currentSession.createQuery(employeeCriteriaQuery).getSingleResult() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean existsByPhone(String phone) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<Employee> employeeCriteriaQuery = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> employeeRoot = employeeCriteriaQuery.from(Employee.class);
+        employeeCriteriaQuery.select(employeeRoot);
+
+        Predicate existsPhone = criteriaBuilder.equal(employeeRoot.get("phone"), phone);
+        employeeCriteriaQuery.where(existsPhone);
+
+        if (currentSession.createQuery(employeeCriteriaQuery).getSingleResult() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

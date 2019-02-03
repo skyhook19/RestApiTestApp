@@ -50,6 +50,17 @@ public class EmployeeController {
         return ResponseEntity.ok().body(createdEmployeeDto);*/
     }
 
+    //rest api e3 method
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateEmployeeById(@PathVariable("id") Integer employeeId,
+                                                @Valid @RequestBody EmployeeDto employeeDto) {
+        EmployeeDto updatedEmployeeDto = employeeService.updateEmployeeById(employeeId, employeeDto);
+        if (updatedEmployeeDto == null){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(updatedEmployeeDto);
+    }
+
     //rest api e5 method
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") Integer id) {
@@ -59,5 +70,4 @@ public class EmployeeController {
         }
         return ResponseEntity.ok().body(employeeDto);
     }
-
 }

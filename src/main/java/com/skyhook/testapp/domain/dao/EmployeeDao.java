@@ -15,4 +15,8 @@ public interface EmployeeDao {
     public List<Employee> getEmployeesByDepartmentId(int departmentId);
 
     public Employee getHeadOfDepartment(int departmentId);
+
+    public Boolean existsByEmail(String email);
+
+    public Boolean existsByPhone(String phone);
 }

@@ -1,11 +1,15 @@
 package com.skyhook.testapp.validation;
 
+import com.skyhook.testapp.validation.exceptions.NotUniqueEmailException;
+import com.skyhook.testapp.validation.exceptions.NotUniqueFieldException;
+import com.skyhook.testapp.validation.exceptions.NotUniquePhoneException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -30,6 +34,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         String description = "Your JSON must have correct field set";
 
         ErrorResponse exceptionResponse = new ErrorResponse(new Date(), errorMessages, description);
-        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotUniqueFieldException.class)
+    public final ResponseEntity<ErrorResponse> handleNotUniqueFieldException(NotUniqueFieldException ex, WebRequest webRequest) {
+        List<String> errorMessages = new ArrayList<>();
+        errorMessages.add(ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "Use unique value");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

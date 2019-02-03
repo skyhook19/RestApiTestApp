@@ -1,13 +1,14 @@
 package com.skyhook.testapp.controller;
 
 import com.skyhook.testapp.domain.dto.EmployeeDto;
-import com.skyhook.testapp.service.DepartmentService;
 import com.skyhook.testapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -35,19 +36,6 @@ public class EmployeeController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(createdEmployeeDto);
-
-        /*EmployeeDto createdEmployeeDto = null;
-        try {
-            createdEmployeeDto = employeeService.addEmployee(employeeDto);
-            if (createdEmployeeDto == null){
-                return ResponseEntity.noContent().build();
-            }
-
-        } catch (Exception ex) {
-            //return ResponseEntity.unprocessableEntity().body(ex.getCause().getMessage());
-            return null;
-        }
-        return ResponseEntity.ok().body(createdEmployeeDto);*/
     }
 
     //rest api e3 method
@@ -61,11 +49,32 @@ public class EmployeeController {
         return ResponseEntity.ok().body(updatedEmployeeDto);
     }
 
+    //rest api e4 method
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteEmployee(@PathVariable("id") Integer employeeId,
+                                            @RequestParam(name="dateOfDischarge") @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate dateOfDischarge) {
+        if(!employeeService.deleteEmployee(employeeId, dateOfDischarge)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
     //rest api e5 method
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable("id") Integer id) {
         EmployeeDto employeeDto = employeeService.getEmployee(id);
         if (employeeDto == null){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(employeeDto);
+    }
+
+    //rest api e6 method
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateEmployeesDepartment(@PathVariable("id") Integer employeeId,
+                                                       @RequestParam(name="newDepartment") Integer newDepartmentId) {
+        EmployeeDto employeeDto = employeeService.updateEmployeesDepartment(employeeId, newDepartmentId);
+        if (employeeDto == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(employeeDto);

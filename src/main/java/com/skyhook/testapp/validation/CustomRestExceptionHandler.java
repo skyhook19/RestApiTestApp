@@ -1,8 +1,7 @@
 package com.skyhook.testapp.validation;
 
-import com.skyhook.testapp.validation.exceptions.NotUniqueEmailException;
+import com.skyhook.testapp.validation.exceptions.NotAcceptableRequestParamException;
 import com.skyhook.testapp.validation.exceptions.NotUniqueFieldException;
-import com.skyhook.testapp.validation.exceptions.NotUniquePhoneException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +41,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errorMessages = new ArrayList<>();
         errorMessages.add(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "Use unique value");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotAcceptableRequestParamException.class)
+    public final ResponseEntity<ErrorResponse> handleNotAcceptableRequestParamException(NotAcceptableRequestParamException ex) {
+        List<String> errorMessages = new ArrayList<>();
+        errorMessages.add(ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "Request param value must be appropriate");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

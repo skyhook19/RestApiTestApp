@@ -6,12 +6,14 @@ import com.skyhook.testapp.domain.dto.EmployeeDto;
 import com.skyhook.testapp.domain.entity.Department;
 import com.skyhook.testapp.domain.entity.Employee;
 import com.skyhook.testapp.service.EmployeeService;
+import com.skyhook.testapp.validation.exceptions.NotAcceptableRequestParamException;
 import com.skyhook.testapp.validation.exceptions.NotUniqueEmailException;
 import com.skyhook.testapp.validation.exceptions.NotUniquePhoneException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +92,41 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeDao.saveEmployee(employeeBeforeUpdate);
         Employee employeeAfterUpdate = employeeDao.getEmployee(id);
         return new EmployeeDto(employeeAfterUpdate);
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteEmployee(Integer id, LocalDate dateOfDischarge) {
+        Employee employee = employeeDao.getEmployee(id);
+
+        if (employee == null) {
+            return false;
+        }
+
+        if (dateOfDischarge == null || dateOfDischarge.compareTo(employee.getJoinedDate()) <= 0) {
+            throw new NotAcceptableRequestParamException("Employee's date of discharge must be greater than date of joining");
+        }
+
+        employee.setDischargeDate(dateOfDischarge);
+        employeeDao.saveEmployee(employee);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public EmployeeDto updateEmployeesDepartment(Integer id, Integer newDepartmentId) {
+        Department newDepartment = departmentDao.getDepartment(newDepartmentId);
+        Employee employeeBeforeUpdate = employeeDao.getEmployee(id);
+
+        if (newDepartment == null || employeeBeforeUpdate == null) {
+            return null;
+        }
+
+        employeeBeforeUpdate.setDepartment(newDepartment);
+        employeeDao.saveEmployee(employeeBeforeUpdate);
+        Employee employeeAfterUpdate = employeeDao.getEmployee(id);
+        EmployeeDto employeeDto = new EmployeeDto(employeeAfterUpdate);
+        return employeeDto;
     }
 
     private void setEmployeeDtoFieldsToEntity(EmployeeDto dto, Employee emp) {

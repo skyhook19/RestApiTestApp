@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,12 +29,25 @@ public class EmployeeController {
 
     //rest api e2 method
     @PostMapping
-    public ResponseEntity<?> addEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<?> addEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         EmployeeDto createdEmployeeDto = employeeService.addEmployee(employeeDto);
         if (createdEmployeeDto == null){
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(createdEmployeeDto);
+
+        /*EmployeeDto createdEmployeeDto = null;
+        try {
+            createdEmployeeDto = employeeService.addEmployee(employeeDto);
+            if (createdEmployeeDto == null){
+                return ResponseEntity.noContent().build();
+            }
+
+        } catch (Exception ex) {
+            //return ResponseEntity.unprocessableEntity().body(ex.getCause().getMessage());
+            return null;
+        }
+        return ResponseEntity.ok().body(createdEmployeeDto);*/
     }
 
     //rest api e5 method

@@ -3,6 +3,7 @@ package com.skyhook.testapp.domain.dto;
 import com.skyhook.testapp.domain.entity.Employee;
 import com.skyhook.testapp.domain.entity.Gender;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,18 +11,42 @@ import java.time.LocalDate;
 public class EmployeeDto implements Serializable {
 
     private int id;
+
+    @NotNull
     private String firstName;
+
     private String middleName;
+
+    @NotNull
     private String lastName;
+
+    @NotNull
     private Gender gender;
+
+    @NotNull
     private LocalDate birthDate;
+
+    @NotNull
     private LocalDate joinedDate;
+
     private LocalDate dischargeDate;
+
+    @NotNull
     private String phone;
+
+    @NotNull
     private String email;
+
+    @NotNull
     private BigDecimal salary;
+
+    @NotNull
     private String position;
+
+    @NotNull
     private int departmentId;
+
+    @NotNull
     private boolean isHeadOfDepartment;
 
     public EmployeeDto() {

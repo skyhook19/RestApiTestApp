@@ -1,5 +1,6 @@
 package com.skyhook.testapp.validation;
 
+import com.skyhook.testapp.validation.exceptions.DoubleHeadOfDepartmentException;
 import com.skyhook.testapp.validation.exceptions.NotAcceptableRequestParamException;
 import com.skyhook.testapp.validation.exceptions.NotUniqueFieldException;
 import org.springframework.http.HttpHeaders;
@@ -49,6 +50,22 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errorMessages = new ArrayList<>();
         errorMessages.add(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "Request param value must be appropriate");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DoubleHeadOfDepartmentException.class)
+    public final ResponseEntity<ErrorResponse> handleNDoubleHeadOfDepartmentException(DoubleHeadOfDepartmentException ex) {
+        List<String> errorMessages = new ArrayList<>();
+        errorMessages.add(ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "Department cannot have two Employees as a Head of Department.");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public final ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        List<String> errorMessages = new ArrayList<>();
+        errorMessages.add(ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(new Date(), errorMessages, "At least one of parameters has invalid value.");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

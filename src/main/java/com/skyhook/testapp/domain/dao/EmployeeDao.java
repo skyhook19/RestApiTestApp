@@ -2,6 +2,7 @@ package com.skyhook.testapp.domain.dao;
 
 import com.skyhook.testapp.domain.entity.Employee;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EmployeeDao {
@@ -19,4 +20,6 @@ public interface EmployeeDao {
     public Boolean existsByEmail(String email);
 
     public Boolean existsByPhone(String phone);
+
+    public List<Employee> getEmployeesJoinedBeforeDate(LocalDate date);
 }

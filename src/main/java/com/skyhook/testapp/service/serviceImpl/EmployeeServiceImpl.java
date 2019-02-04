@@ -6,9 +6,11 @@ import com.skyhook.testapp.domain.dto.EmployeeDto;
 import com.skyhook.testapp.domain.entity.Department;
 import com.skyhook.testapp.domain.entity.Employee;
 import com.skyhook.testapp.service.EmployeeService;
+import com.skyhook.testapp.validation.exceptions.DoubleHeadOfDepartmentException;
 import com.skyhook.testapp.validation.exceptions.NotAcceptableRequestParamException;
 import com.skyhook.testapp.validation.exceptions.NotUniqueEmailException;
 import com.skyhook.testapp.validation.exceptions.NotUniquePhoneException;
+import com.sun.jmx.remote.internal.ArrayQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -129,6 +131,71 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDto;
     }
 
+    @Override
+    @Transactional
+    public List<EmployeeDto> moveEmployeesToDepartment(Integer previousDepartmentId, Integer newDepartmentId) {
+        if (previousDepartmentId == null || newDepartmentId == null) {
+            throw new IllegalArgumentException("Parameters must be not null");
+        }
+
+        List<Employee> employeesFromPrevDep = employeeDao.getEmployeesByDepartmentId(previousDepartmentId);
+        Department newDepartment = departmentDao.getDepartment(newDepartmentId);
+
+        if (employeesFromPrevDep == null || newDepartment == null) {
+            return null;
+        }
+
+        Boolean doesNewDepHaveHead = doesDepartmentHaveHead(newDepartmentId);
+        for (Employee emp : employeesFromPrevDep) {
+            if (emp.isHeadOfDepartment() && doesNewDepHaveHead) {
+                throw new DoubleHeadOfDepartmentException("Department {" + newDepartmentId + "} already has Head of Department. " +
+                        "Change parameter 'isHeadOfDepartment' of Employee {" + emp.getId() + "} to the false value and try to move employees again");
+            } else {
+                newDepartment.addEmployee(emp);
+            }
+        }
+
+        departmentDao.saveDepartment(newDepartment);
+        return getEmployeesByDepartmentId(newDepartmentId);
+    }
+
+    @Override
+    @Transactional
+    public EmployeeDto getHeadOfEmployee(Integer employeeId) {
+        Employee emp = employeeDao.getEmployee(employeeId);
+
+        if (emp != null) {
+            Department department = emp.getDepartment();
+            List<Employee> employees = department.getEmployees();
+            for (Employee employee : employees) {
+                if (employee.isHeadOfDepartment()) {
+                    return new EmployeeDto(employee);
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public List<EmployeeDto> getEmployeesJoinedBeforeDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("Parameter date must be not null");
+        }
+
+        List<Employee> employees = employeeDao.getEmployeesJoinedBeforeDate(date);
+        if (employees == null) {
+            return null;
+        }
+
+        List<EmployeeDto> employeeDtos = new ArrayList<>(employees.size());
+        for (Employee employee : employees) {
+            employeeDtos.add(new EmployeeDto(employee));
+        }
+
+        return employeeDtos;
+    }
+
     private void setEmployeeDtoFieldsToEntity(EmployeeDto dto, Employee emp) {
         emp.setFirstName(dto.getFirstName());
         emp.setMiddleName(dto.getMiddleName());
@@ -143,5 +210,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setPosition(dto.getPosition());
         emp.setDepartment(departmentDao.getDepartment(dto.getDepartment()));
         emp.setHeadOfDepartment(dto.isHeadOfDepartment());
+    }
+
+    private Boolean doesDepartmentHaveHead(Integer departmentId) {
+        List<Employee> employees = employeeDao.getEmployeesByDepartmentId(departmentId);
+
+        for (Employee emp : employees) {
+            if (emp.isHeadOfDepartment()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

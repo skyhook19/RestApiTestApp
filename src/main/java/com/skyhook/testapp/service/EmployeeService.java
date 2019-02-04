@@ -19,4 +19,10 @@ public interface EmployeeService {
     public Boolean deleteEmployee(Integer id, LocalDate dateOfDischarge);
 
     public EmployeeDto updateEmployeesDepartment(Integer id, Integer newDepartmentId);
+
+    public List<EmployeeDto> moveEmployeesToDepartment(Integer previousDepartmentId, Integer newDepartmentId);
+
+    public EmployeeDto getHeadOfEmployee(Integer employeeId);
+
+    public List<EmployeeDto> getEmployeesJoinedBeforeDate(LocalDate date);
 }

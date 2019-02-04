@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -70,13 +73,44 @@ public class EmployeeController {
     }
 
     //rest api e6 method
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{id}/department")
     public ResponseEntity<?> updateEmployeesDepartment(@PathVariable("id") Integer employeeId,
-                                                       @RequestParam(name="newDepartment") Integer newDepartmentId) {
+                                                       @RequestParam(name="newDepartmentId") Integer newDepartmentId) {
         EmployeeDto employeeDto = employeeService.updateEmployeesDepartment(employeeId, newDepartmentId);
         if (employeeDto == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(employeeDto);
+    }
+
+    //rest api e7 method
+    @PutMapping(value = "/department")
+    public ResponseEntity<?> moveEmployeesToDepartment(@RequestParam(name="previousDepartmentId") Integer previousDepartmentId,
+                                                       @RequestParam(name="newDepartmentId") Integer newDepartmentId) {
+        List<EmployeeDto> employeeDtos = employeeService.moveEmployeesToDepartment(previousDepartmentId, newDepartmentId);
+        if (employeeDtos == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(employeeDtos);
+    }
+
+    //rest api e8 method
+    @GetMapping(value = "/{id}/head")
+    public ResponseEntity<?> getHeadOfEmployee(@PathVariable("id") Integer employeeId) {
+        EmployeeDto headEmployee = employeeService.getHeadOfEmployee(employeeId);
+        if (headEmployee == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(headEmployee);
+    }
+
+    //rest api e9 method
+    @GetMapping(value = "/joinedDate/before")
+    public ResponseEntity<?> getEmployeesJoinedBeforeDate(@RequestParam(name="date") @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate date) {
+        List<EmployeeDto> employeeDtos = employeeService.getEmployeesJoinedBeforeDate(date);
+        if (employeeDtos == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(employeeDtos);
     }
 }

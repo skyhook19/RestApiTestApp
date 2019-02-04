@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -73,7 +74,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         Predicate existsEmail = criteriaBuilder.equal(employeeRoot.get("email"), email);
         employeeCriteriaQuery.where(existsEmail);
 
-        if (currentSession.createQuery(employeeCriteriaQuery).getSingleResult() != null) {
+        if (!currentSession.createQuery(employeeCriteriaQuery).getResultList().isEmpty()) {
             return true;
         } else {
             return false;
@@ -91,10 +92,23 @@ public class EmployeeDaoImpl implements EmployeeDao {
         Predicate existsPhone = criteriaBuilder.equal(employeeRoot.get("phone"), phone);
         employeeCriteriaQuery.where(existsPhone);
 
-        if (currentSession.createQuery(employeeCriteriaQuery).getSingleResult() != null) {
+        if (!currentSession.createQuery(employeeCriteriaQuery).getResultList().isEmpty()) {
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Employee> getEmployeesJoinedBeforeDate(LocalDate date) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBuilder = currentSession.getCriteriaBuilder();
+        CriteriaQuery<Employee> employeeCriteriaQuery = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> employeeRoot = employeeCriteriaQuery.from(Employee.class);
+        employeeCriteriaQuery.select(employeeRoot);
+
+        Predicate beforeDate = criteriaBuilder.lessThan(employeeRoot.get("joinedDate"), date);
+        employeeCriteriaQuery.where(beforeDate);
+        return currentSession.createQuery(employeeCriteriaQuery).getResultList();
     }
 }

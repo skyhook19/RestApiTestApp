@@ -81,6 +81,16 @@ public class Department {
         this.employees = employees;
     }
 
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+        employee.setDepartment(this);
+    }
+
+    public void removeEmployee(Employee employee) {
+        employee.setDepartment(null);
+        employees.remove(employee);
+    }
+
     @Override
     public String toString() {
         return "Department{" +

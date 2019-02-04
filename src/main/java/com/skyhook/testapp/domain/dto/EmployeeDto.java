@@ -2,6 +2,7 @@ package com.skyhook.testapp.domain.dto;
 
 import com.skyhook.testapp.domain.entity.Employee;
 import com.skyhook.testapp.domain.entity.Gender;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 public class EmployeeDto implements Serializable {
 
+    @ApiModelProperty(notes = "The database generated Employee ID")
     private int id;
 
     @NotNull
@@ -29,8 +31,10 @@ public class EmployeeDto implements Serializable {
 
     @NotNull
     @Past
+    @ApiModelProperty(notes = "Date of employee joining to the company")
     private LocalDate joinedDate;
 
+    @ApiModelProperty(notes = "Date of employee discharged from the company, NULL if employee still working in company")
     private LocalDate dischargeDate;
 
     @NotNull
@@ -53,6 +57,7 @@ public class EmployeeDto implements Serializable {
     private int departmentId;
 
     @NotNull
+    @ApiModelProperty(notes = "Indicator if this employee is a head of his department")
     private boolean isHeadOfDepartment;
 
     public EmployeeDto() {

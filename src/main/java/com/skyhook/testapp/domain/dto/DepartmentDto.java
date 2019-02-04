@@ -1,14 +1,25 @@
 package com.skyhook.testapp.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
 public class DepartmentDto implements Serializable {
 
+    @ApiModelProperty(notes = "The database generated Department ID")
     private int id;
+
+    @ApiModelProperty(notes = "The name of department")
     private String name;
+
+    @ApiModelProperty(notes = "The date of department creation")
     private LocalDate dateOfCreation;
+
+    @ApiModelProperty(notes = "Count of employees working in this department")
     private int employeesCount;
+
+    @ApiModelProperty(notes = "Information about head employee of the department")
     private EmployeeDto headOfDepartment;
 
     public DepartmentDto() {

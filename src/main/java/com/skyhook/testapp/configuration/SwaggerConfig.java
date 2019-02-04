@@ -23,6 +23,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .apis(RequestHandlerSelectors.basePackage("com.skyhook.testapp.controller"))
                 .paths(PathSelectors.any())
                 .build()
+                .pathMapping("/")
+                .useDefaultResponseMessages(false)
                 .apiInfo(metaData());
 
     }

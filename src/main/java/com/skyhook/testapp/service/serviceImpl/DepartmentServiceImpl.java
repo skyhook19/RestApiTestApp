@@ -61,6 +61,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentDto updateDepartmentName(Integer id, String name) {
         Department department = departmentDao.getDepartment(id);
 
+        // TODO: 04.02.19 create notUniqueNameException
+
         if(department == null || sameNameDepartmentExists(name)) {
             return null;
         }
